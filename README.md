@@ -6,13 +6,17 @@ At the same time, I think that the idea of an app that will contain all up-to-da
 
 So, maybe, I'll come back to this project at some time in the future and make it more stable and useful.
 
+## Notes
+
+Getting news can work only in a half of cases because of the specific free API choice.
+
 ## Features
 
 #### News API
 
 I use this api for getting news - [https://currentsapi.services/](https://currentsapi.services/)
-Initially I used this one - [https://newsapi.org/](https://newsapi.org/), but after deployment I realized it is free only for local use, so I needed to find something else.
-The initial one worked flawlessly, but the current one is not working so good, returning data only in a half of requests, but at least I can use it on remote server. So for not I decided to stick with it, maybe in the future I will add some more reliable way of getting news.
+Initially I used this one - [https://newsapi.org/](https://newsapi.org/), but after deployment I realized it is free only for local use, so I needed to find something else, but similar.
+The initial one worked flawlessly, but the current one is not working so good, returning data only in a 50-75% of requests, but at least I can use it on remote server for free. So for not I decided to stick with it, maybe in the future I will add some more reliable way of getting news.
 
 #### Weather API
 
