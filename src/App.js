@@ -17,10 +17,12 @@ export default function App() {
   const [locationQuery, setLocationQuery] = useState(savedLocation);
   const [isLocationSet, setIsLocationSet] = useState(false);
   // const [isLocationLoading, setIsLocationLoading] = useState(false);
+  const [isNewsLoading, setIsNewsLoading] = useState(false);
 
   useEffect(
     function () {
       setIsLocationSet(false);
+      setIsNewsLoading(false);
       const controller = new AbortController();
 
       async function getLocation() {
@@ -41,6 +43,7 @@ export default function App() {
           } else if (locationResponse.results) {
             // setIsLocationLoading(false);
             setLocation(locationResponse.results.at(0));
+            console.log(locationResponse.results.at(0));
           }
         } catch (err) {
           if (err.name !== "AbortError") {
@@ -65,23 +68,44 @@ export default function App() {
 
   async function getNewsData() {
     try {
+      setIsNewsLoading(true);
       if (!location.name) return;
       const response = await fetch(
-        `https://newsapi.org/v2/everything?q=${location.name}&searchIn=title,description&language=en&sortBy=relevancy&pageSize=10&apiKey=${news_API_key}`,
+        `https://api.currentsapi.services/v1/search?keywords=${location.name}&language=en&start_date:2024-01-01&page_size=10&limit=10&apiKey=${news_API_key}`,
         {
           signal: controllerNews.signal,
         }
       );
       const newsData = await response.json();
-      setNews(
-        newsData.articles.filter(
-          (news, i) =>
-            news.title !== "[Removed]" &&
-            newsData.articles.at(i - 1).publishedAt !== news.publishedAt
-        )
-      );
+      if (!newsData.news) {
+        setIsNewsLoading(false);
+        setNews([
+          {
+            title: "Something went wrong",
+            description: "-",
+            published: "- no date",
+            author: "-",
+            url: "-",
+          },
+        ]);
+      } else if (newsData.news) {
+        setIsNewsLoading(false);
+        setNews(
+          newsData.news.filter((article, i) => article.title !== newsData.news.at(i - 1).title)
+        );
+      }
+      console.log(newsData.news);
     } catch (error) {
       console.error(error);
+      setNews([
+        {
+          title: "Something went wrong",
+          description: "-",
+          published: "- no date",
+          author: "-",
+          url: "-",
+        },
+      ]);
     } finally {
       controllerNews.abort();
     }
@@ -91,7 +115,11 @@ export default function App() {
     try {
       const { latitude, longitude, timezone } = location;
       const weatherResponse = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=${timezone}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code`,
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}${
+          timezone ? "&timezone=" : ""
+        }${
+          timezone ? timezone : ""
+        }&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code`,
         {
           signal: controllerWeather.signal,
         }
@@ -99,6 +127,7 @@ export default function App() {
 
       const weatherData = await weatherResponse.json();
       setWeather(weatherData.daily);
+      console.log(weatherData.daily);
     } catch (error) {
       console.error(error);
     } finally {
@@ -156,7 +185,7 @@ export default function App() {
         <LocationResult location={location} />
       </NavBar>
       <Main>
-        <NewsArea news={news} isLocationSet={isLocationSet} />
+        <NewsArea news={news} isLocationSet={isLocationSet} isNewsLoading={isNewsLoading} />
         <WeatherArea weather={weather} isLocationSet={isLocationSet} />
         <CurrencyArea currency={currency} isLocationSet={isLocationSet} />
         <NewFeatures />

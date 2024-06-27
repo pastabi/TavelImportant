@@ -1,12 +1,19 @@
-export function NewsArea({ news, isLocationSet }) {
+export function NewsArea({ news, isLocationSet, isNewsLoading }) {
   return (
     <div className="news-area area-styling">
       <h3>News</h3>
 
-      {news && isLocationSet ? (
+      {isNewsLoading ? (
+        <div>
+          <p className="no-content loading-news">
+            Loading... <br />
+            (If it's taking too long, try searching for another location)
+          </p>
+        </div>
+      ) : news && isLocationSet ? (
         <ul className="news-list">
           {news.map((article) => (
-            <NewsArticle article={article} key={article.publishedAt} />
+            <NewsArticle article={article} key={article.id} />
           ))}
         </ul>
       ) : (
@@ -24,8 +31,8 @@ function NewsArticle({ article }) {
       <h4 className="title">{article.title}</h4>
       <p className="description">{article.description}</p>
       <div className="news-info">
-        <span className="news-date">{article.publishedAt.split("T", 1)} </span>
-        <span className="source">&bull; Source: {article.source.name} &bull;</span>
+        <span className="news-date">{article.published.split(" ", 1)} </span>
+        <span className="source">&bull; Author: {article.author} &bull;</span>
         <a href={article.url}>Read full article</a>
       </div>
     </li>
