@@ -25,6 +25,16 @@ function formatDay(date) {
 }
 
 export function WeatherArea({ weather, isLocationSet }) {
+  if (!weather.time)
+    return (
+      <div className="weather-area area-styling">
+        <h3>Weather forecast</h3>
+        <p className="no-content loading-indicator">
+          Something went wrong with getting weather for this location.
+        </p>
+      </div>
+    );
+
   const {
     precipitation_sum: precipit,
     temperature_2m_max: max,

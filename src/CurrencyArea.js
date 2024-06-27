@@ -1,5 +1,15 @@
+const currencySigns = ["$", "€", "£", "¥", "₣"];
+
 export function CurrencyArea({ currency, isLocationSet }) {
-  const currencySigns = ["$", "€", "£", "¥", "₣"];
+  if (currency.noCurrency)
+    return (
+      <div className="currency-area area-styling">
+        <h3>Currency exchange rates</h3>
+        <p className="no-content loading-indicator">
+          Something went wrong with getting currency exchange rates for this location.
+        </p>
+      </div>
+    );
   let baseCurrency, exchangeRates, mainWorldCurrencies;
   if (currency) {
     baseCurrency = Object.keys(currency).at(0);

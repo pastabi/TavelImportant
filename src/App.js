@@ -69,7 +69,6 @@ export default function App() {
   async function getNewsData() {
     try {
       setIsNewsLoading(true);
-      if (!location.name) return;
       const response = await fetch(
         `https://api.currentsapi.services/v1/search?keywords=${location.name}&language=en&start_date:2024-01-01&page_size=10&limit=10&apiKey=${news_API_key}`,
         {
@@ -81,11 +80,12 @@ export default function App() {
         setIsNewsLoading(false);
         setNews([
           {
-            title: "Something went wrong",
-            description: "-",
-            published: "- no date",
-            author: "-",
-            url: "-",
+            title: "Something went wrong with getting news for this location.",
+            description: "?????",
+            published: "??-??-???? ",
+            author: "?????",
+            url: "#",
+            id: "0",
           },
         ]);
       } else if (newsData.news) {
@@ -97,13 +97,15 @@ export default function App() {
       console.log(newsData.news);
     } catch (error) {
       console.error(error);
+      setIsNewsLoading(false);
       setNews([
         {
-          title: "Something went wrong",
-          description: "-",
-          published: "- no date",
-          author: "-",
-          url: "-",
+          title: "Something went wrong with getting news for this location.",
+          description: "?????",
+          published: "??-??-???? ",
+          author: "?????",
+          url: "#",
+          id: "0",
         },
       ]);
     } finally {
@@ -130,6 +132,7 @@ export default function App() {
       console.log(weatherData.daily);
     } catch (error) {
       console.error(error);
+      setWeather([]);
     } finally {
       controllerWeather.abort();
     }
@@ -147,6 +150,7 @@ export default function App() {
         }
       );
       const { base_code, conversion_rates } = await response.json();
+      if (!base_code) setCurrency({ noCurrency: "no currency" });
       const currencyRates = {
         [base_code]: {
           USD: conversion_rates.USD,
@@ -159,6 +163,7 @@ export default function App() {
       setCurrency(currencyRates);
     } catch (error) {
       console.error(error);
+      setCurrency({ noCurrency: "no currency" });
     } finally {
       controllerCurrency.abort();
     }

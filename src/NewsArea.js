@@ -5,7 +5,7 @@ export function NewsArea({ news, isLocationSet, isNewsLoading }) {
 
       {isNewsLoading ? (
         <div>
-          <p className="no-content loading-news">
+          <p className="no-content loading-indicator">
             Loading... <br />
             (If it's taking too long, try searching for another location)
           </p>
