@@ -91,7 +91,13 @@ export default function App() {
       } else if (newsData.news) {
         setIsNewsLoading(false);
         setNews(
-          newsData.news.filter((article, i) => article.title !== newsData.news.at(i - 1).title)
+          newsData.news.filter(
+            (article, i) =>
+              article.title !== newsData.news.at(i - 1).title &&
+              article.published !== newsData.news.at(i - 1).published &&
+              article.description.split("").length > 20 &&
+              article.description.split(".", 1) !== "www"
+          )
         );
       }
       console.log(newsData.news);
