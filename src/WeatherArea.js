@@ -25,7 +25,7 @@ function formatDay(date) {
 }
 
 export function WeatherArea({ weather, isLocationSet }) {
-  if (!weather.time)
+  if (weather.noWeather)
     return (
       <div className="weather-area area-styling">
         <h3>Weather forecast</h3>
