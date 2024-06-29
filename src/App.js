@@ -43,7 +43,6 @@ export default function App() {
           } else if (locationResponse.results) {
             // setIsLocationLoading(false);
             setLocation(locationResponse.results.at(0));
-            console.log(locationResponse.results.at(0));
           }
         } catch (err) {
           if (err.name !== "AbortError") {
@@ -100,7 +99,6 @@ export default function App() {
           )
         );
       }
-      console.log(newsData.news);
     } catch (error) {
       console.error(error);
       setIsNewsLoading(false);
@@ -135,10 +133,9 @@ export default function App() {
 
       const weatherData = await weatherResponse.json();
       setWeather(weatherData.daily);
-      console.log(weatherData.daily);
     } catch (error) {
       console.error(error);
-      setWeather([]);
+      setWeather({ noWeather: "no weather" });
     } finally {
       controllerWeather.abort();
     }
